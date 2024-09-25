@@ -22,7 +22,7 @@ This Java application connects to the CoinDCX WebSocket API to fetch real-time t
 - WebSocket for Real-Time Data
 - Error Handling: Implemented robust error handling and logging for connection management to improve reliability
 
-## Librarires Used
+## Libraries Used
 - SLF4J: For logging functionality
 - Gson: For JSON parsing and serialization
 - Java-WebSocket: For handling WebSocket connections
