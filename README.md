@@ -25,5 +25,7 @@ This Java application connects to the CoinDCX WebSocket API to fetch real-time t
 ## Librarires Used
 
 -SLF4J: For logging functionality
+
 -Gson: For JSON parsing and serialization
+
 -Java-WebSocket: For handling WebSocket connections
