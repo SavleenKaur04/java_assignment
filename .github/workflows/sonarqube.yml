@@ -31,9 +31,10 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}
 
-      - name: Run SonarQube Analysis
+      - name: Run SonarQube Analysis (Debug Mode)
         run: |
           mvn clean verify sonar:sonar \
             -Dsonar.projectKey=java_assignment \
             -Dsonar.host.url=http://your-sonarqube-server \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -e -X
