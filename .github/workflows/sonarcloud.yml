@@ -38,7 +38,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build and Analyze with SonarCloud
-        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -47,7 +46,6 @@ jobs:
             -Dsonar.projectKey=SavleenKaur04_java_assignment \
             -Dsonar.organization=savleenkaur04 \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.qualitygate.wait=false
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
             -Dsonar.pullrequest.branch=${{ github.head_ref }} \
             -Dsonar.pullrequest.base=${{ github.base_ref }} \
