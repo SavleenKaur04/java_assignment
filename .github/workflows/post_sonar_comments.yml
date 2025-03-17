@@ -1,0 +1,31 @@
+name: Post SonarCloud Comments on PR
+
+on:
+  workflow_run:
+    workflows: ["Fetch SonarCloud Issues"]
+    types:
+      - completed
+
+jobs:
+  sonar-comments:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Sonar Issues
+        uses: actions/download-artifact@v3
+        with:
+          name: sonar-issues
+
+      - name: Post PR Comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUES=$(jq -c '.issues[]' sonar_issues.json)
+
+          for row in $ISSUES; do
+            MESSAGE=$(echo $row | jq -r '"🚨 Issue: " + .message + "\n🔗 More info: " + .rule + "\n📍 File: " + .component')
+            curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+              -d "{\"body\": \"$MESSAGE\"}"
+          done
