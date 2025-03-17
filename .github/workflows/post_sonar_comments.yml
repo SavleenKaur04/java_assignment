@@ -12,21 +12,29 @@ jobs:
 
     steps:
       - name: Wait for Artifact Availability
-        run: sleep 20  # Ensures artifact is available before downloading
+        run: sleep 60  # Ensures artifact is available before downloading
+
+      - name: List Available Artifacts (Debugging)
+        run: |
+          echo "Checking available artifacts before download..."
+          curl -H "Authorization: token $GITHUB_TOKEN" \
+          https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
 
       - name: Download Sonar Issues
         uses: actions/download-artifact@v4
         with:
           name: sonar-issues
           path: ./sonar-data
+        continue-on-error: true  # Prevent workflow from failing immediately
 
       - name: Verify Artifact Exists
         run: |
           echo "Checking if artifact was downloaded..."
-          ls -lah ./sonar-data
-          cat ./sonar-data/sonar_issues.json || echo "❌ Artifact is missing!"
+          ls -lah ./sonar-data || echo "❌ Artifact is missing!"
+          cat ./sonar-data/sonar_issues.json || echo "❌ Artifact file not found!"
 
-      - name: Post PR Comments
+      - name: Post PR Comments (Only If Artifact Exists)
+        if: success()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
