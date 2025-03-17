@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class client{
     public static void main(String[] args) {
         double triggerPrice;
-
+        int x=567
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter trigger price: ");
