@@ -11,16 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Wait for Artifact Availability
+        run: sleep 20  # Ensures artifact is available before downloading
+
       - name: Download Sonar Issues
         uses: actions/download-artifact@v4
         with:
           name: sonar-issues
+          path: ./sonar-data
+
+      - name: Verify Artifact Exists
+        run: |
+          echo "Checking if artifact was downloaded..."
+          ls -lah ./sonar-data
+          cat ./sonar-data/sonar_issues.json || echo "❌ Artifact is missing!"
 
       - name: Post PR Comments
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ISSUES=$(jq -c '.issues[]' sonar_issues.json)
+          ISSUES=$(jq -c '.issues[]' ./sonar-data/sonar_issues.json)
 
           for row in $ISSUES; do
             MESSAGE=$(echo $row | jq -r '"🚨 Issue: " + .message + "\n🔗 More info: " + .rule + "\n📍 File: " + .component')
