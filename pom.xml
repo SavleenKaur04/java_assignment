@@ -7,8 +7,8 @@
   <name>Archetype - Test</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <sonar.organization>savleenkaur04</sonar.organization>
-    <sonar.projectKey>SavleenKaur04_java_assignment</sonar.projectKey>
+  <sonar.organization>savleenkaur04</sonar.organization>
+  <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 </properties>
 
   <build>
