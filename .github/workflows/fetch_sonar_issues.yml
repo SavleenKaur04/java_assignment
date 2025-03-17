@@ -1,0 +1,24 @@
+name: Fetch SonarCloud Issues
+
+on:
+  workflow_run:
+    workflows: ["SonarCloud Analysis"]
+    types:
+      - completed
+
+jobs:
+  fetch-sonar-issues:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch SonarCloud Issues
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          curl -u "$SONAR_TOKEN:" "https://sonarcloud.io/api/issues/search?componentKeys=YourProjectKey&types=BUG,VULNERABILITY,CODE_SMELL" > sonar_issues.json
+
+      - name: Upload Issues as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sonar-issues
+          path: sonar_issues.json
