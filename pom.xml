@@ -6,6 +6,11 @@
   <version>1.0-SNAPSHOT</version>
   <name>Archetype - Test</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <sonar.organization>SavleenKaur04</sonar.organization>
+    <sonar.projectKey>savleenkaur04</sonar.projectKey>
+</properties>
+
   <build>
     <plugins>
         <plugin>
