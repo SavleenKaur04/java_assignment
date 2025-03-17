@@ -80,6 +80,6 @@ public class CoinDCXWebSocketClient extends WebSocketClient {
 
     }
 
-
+//adding a comment to see how everything works
 }
 
