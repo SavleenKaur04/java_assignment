@@ -1,4 +1,4 @@
-name: SonarQube Analysis
+name: SonarCloud Analysis
 
 on:
   pull_request:
@@ -10,7 +10,7 @@ on:
 
 jobs:
   sonar:
-    name: SonarQube Analysis
+    name: SonarCloud Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -31,10 +31,10 @@ jobs:
           restore-keys: |
             maven-${{ runner.os }}
 
-      - name: Run SonarQube Analysis (Debug Mode)
+      - name: Run SonarCloud Analysis
         run: |
           mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=java_assignment \
-            -Dsonar.host.url=http://your-sonarqube-server \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -e -X
+            -Dsonar.projectKey=savleenkaur04 \
+            -Dsonar.organization=SavleenKaur04 \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
