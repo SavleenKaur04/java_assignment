@@ -17,8 +17,15 @@ jobs:
         run: |
           curl -u "$SONAR_TOKEN:" "https://sonarcloud.io/api/issues/search?componentKeys=YourProjectKey&types=BUG,VULNERABILITY,CODE_SMELL" > sonar_issues.json
 
+      - name: Verify JSON File Exists
+        run: |
+          echo "Checking if sonar_issues.json was created..."
+          ls -lah
+          cat sonar_issues.json || echo "❌ No issues found!"
+
       - name: Upload Issues as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: sonar-issues
           path: sonar_issues.json
+          retention-days: 5  # Keep artifact for 5 days
