@@ -80,6 +80,7 @@ public class CoinDCXWebSocketClient extends WebSocketClient {
 
     }
 
+// Testing SonarQube PR decoration
 
 }
 
