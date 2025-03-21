@@ -1,0 +1,51 @@
+name: SonarCloud Code Review
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Run SonarCloud Analysis
+        run: |
+          mvn clean verify sonar:sonar \
+            -Dsonar.organization=savleenkaur04 \
+            -Dsonar.projectKey=SavleenKaur04_java_assignment \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN_CLOUD }}
+
+      - name: Fetch SonarCloud Issues
+        run: |
+          SONAR_RESULTS=$(curl -s "https://sonarcloud.io/api/issues/search?componentKeys=your-project-key&statuses=OPEN&resolved=false")
+          echo "$SONAR_RESULTS" > sonar-report.json
+
+      - name: Extract Issues & Post Comment on PR
+        run: |
+          COMMENT="### 🚨 SonarCloud Code Review Report\n\n"
+          ISSUES=$(jq -r '.issues[] | "- **File:** \(.component) - **Issue:** \(.message) (**Severity:** \(.severity))"' sonar-report.json)
+          
+          if [[ -z "$ISSUES" ]]; then
+            COMMENT+="✅ No issues found in this PR!"
+          else
+            COMMENT+="$ISSUES"
+          fi
+
+          PAYLOAD=$(jq -n --arg body "$COMMENT" '{body: $body}')
+          
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3+json" \
+               -d "$PAYLOAD" \
+               "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
